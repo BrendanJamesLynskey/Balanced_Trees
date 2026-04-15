@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Balanced Trees</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/black.min.css">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+  :root {
+    --amber:  #f5a623;
+    --green:  #4ecb8d;
+    --purple: #a78bfa;
+    --blue:   #60a5fa;
+    --red:    #f87171;
+    --bg:     #0a0a0f;
+    --bg2:    #10101a;
+    --bg3:    #181824;
+    --border: #2a2a3a;
+    --text:   #e8e8f0;
+    --muted:  #8888a8;
+  }
+
+  .reveal-viewport { background: var(--bg); }
+  .reveal .slides section { background: transparent; }
+
+  .reveal { font-family: 'DM Sans', sans-serif; color: var(--text); }
+  .reveal h1, .reveal h2, .reveal h3 { font-family: 'Playfair Display', serif; font-weight: 700; }
+  .reveal h1 { font-size: 1.6em; color: var(--amber); line-height: 1.1; }
+  .reveal h2 { font-size: 1.1em; color: var(--amber); margin-bottom: .2em; }
+  .reveal h3 { font-size: .78em; color: var(--green); margin-bottom: .15em; }
+  .reveal p  { font-size: .56em; line-height: 1.45; color: var(--text); }
+  .reveal li { font-size: .54em; line-height: 1.45; margin-bottom: .1em; }
+  .reveal code { font-family: 'JetBrains Mono', monospace; font-size: .72em; }
+  .reveal pre  { box-shadow: none; background: var(--bg3); border: 1px solid var(--border);
+                 border-radius: 6px; padding: .3em .5em; margin: .25em 0; }
+  .reveal pre code { font-size: .52em; line-height: 1.35; background: transparent; color: #cdd6f4; }
+
+  /* ── slide chrome ── */
+  .slide-hdr {
+    display: flex; align-items: center; gap: .4em;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: .2em; margin-bottom: .3em;
+  }
+  .slide-hdr .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .42em; font-weight: 500;
+    color: var(--bg); background: var(--amber);
+    padding: .1em .4em; border-radius: 3px;
+    letter-spacing: .04em;
+  }
+  .slide-hdr h2 { margin: 0; font-size: .95em; }
+
+  /* ── two-column ── */
+  .cols   { display: grid; gap: .5em; }
+  .cols-2 { grid-template-columns: 1fr 1fr; }
+  .cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .cols-6040 { grid-template-columns: 6fr 4fr; }
+  .cols-4060 { grid-template-columns: 4fr 6fr; }
+
+  /* ── cards ── */
+  .card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 6px; padding: .35em .6em;
+  }
+  .card.amber { border-left: 3px solid var(--amber); }
+  .card.green { border-left: 3px solid var(--green); }
+  .card.purple{ border-left: 3px solid var(--purple); }
+  .card.blue  { border-left: 3px solid var(--blue); }
+  .card.red   { border-left: 3px solid var(--red); }
+  .card h3 { font-size: .64em; margin: 0 0 .12em; }
+  .card p  { font-size: .52em; margin: 0; color: #b8b8d0; }
+  .card ul { margin: 0; padding-left: 1em; }
+  .card li { font-size: .52em; color: #b8b8d0; margin-bottom: .02em; }
+
+  /* ── table ── */
+  .reveal table { width: 100%; border-collapse: collapse; font-size: .5em; }
+  .reveal table th { background: var(--bg3); color: var(--amber); font-weight: 600;
+                     padding: .2em .4em; border: 1px solid var(--border); text-align: left; }
+  .reveal table td { padding: .18em .4em; border: 1px solid var(--border); color: #ccc; }
+  .reveal table tr:nth-child(even) td { background: #0e0e18; }
+
+  /* ── accent spans ── */
+  .a  { color: var(--amber); font-weight: 600; }
+  .g  { color: var(--green); font-weight: 600; }
+  .p  { color: var(--purple); font-weight: 600; }
+  .b  { color: var(--blue); font-weight: 600; }
+  .r  { color: var(--red); font-weight: 600; }
+  .mono { font-family: 'JetBrains Mono', monospace; }
+
+  /* ── SVG graph diagrams ── */
+  svg.diagram { display: block; margin: 0 auto; overflow: visible; }
+
+  /* ── pill badges ── */
+  .pill {
+    display: inline-block; font-family: 'JetBrains Mono', monospace;
+    font-size: .44em; padding: .08em .4em; border-radius: 99px;
+    border: 1px solid; margin: 0 .08em;
+  }
+  .pill.amber { color: var(--amber); border-color: var(--amber); }
+  .pill.green { color: var(--green); border-color: var(--green); }
+  .pill.purple{ color: var(--purple); border-color: var(--purple); }
+  .pill.blue  { color: var(--blue); border-color: var(--blue); }
+
+  /* ── footer — hidden ── */
+  .reveal .slide-footer { display: none; }
+  /* title slide special */
+  .title-slide h1 { font-size: 1.8em; }
+  .title-slide .subtitle {
+    font-size: .7em; color: var(--green); font-family: 'DM Sans', sans-serif;
+    font-weight: 300; letter-spacing: .04em; margin: .3em 0 .6em;
+  }
+  .title-slide .meta { font-size: .48em; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+
+  /* ── super-step animator ── */
+  .ss-row {
+    display: flex; gap: .25em; align-items: center;
+    margin: .1em 0; font-size: .55em; font-family: 'JetBrains Mono', monospace;
+  }
+  .ss-node {
+    padding: .2em .55em; border-radius: 5px; font-size: .9em;
+    background: var(--bg3); border: 1px solid var(--border); color: var(--text);
+  }
+  .ss-node.active { background: #1a2a1a; border-color: var(--green); color: var(--green); }
+  .ss-node.done   { background: #1a1a2a; border-color: var(--purple); color: var(--purple); }
+  .ss-arrow { color: var(--amber); }
+  .ss-label { font-size: .8em; color: var(--muted); margin-left: .3em; }
+
+  /* reduce default margins */
+  .reveal ul, .reveal ol { margin: .15em 0 .15em 1em; }
+.reveal .slides > section { display: flex !important; flex-direction: column !important; overflow-y: auto !important; align-items: stretch !important; justify-content: flex-start !important; }
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 01 — Title
+══════════════════════════════════════════════════════════════════ -->
+<section class="title-slide" data-background-color="#0a0a0f">
+  <div style="font-family:'JetBrains Mono',monospace; font-size:.5em; color:var(--muted); margin-bottom:.4em; letter-spacing:.1em;">COMPUTER SCIENCE FUNDAMENTALS SERIES</div>
+  <h1>Balanced<br>Trees</h1>
+  <div class="subtitle">
+    AVL trees · Red-Black trees · Rotations ·<br>
+    2-3 trees · Balance factor · Persistent trees
+  </div>
+  <div style="width:60px; height:3px; background:var(--amber); margin-bottom:1.4em;"></div>
+  <div class="meta">
+    Mid-level software engineer track &nbsp;·&nbsp; 20 slides
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 02 — Why Balancing Matters
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">02</span>
+    <h2>Why Balancing Matters</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>The promise of binary search trees</h3>
+      <p>A BST offers <code>O(log n)</code> search, insert, and delete — but only when the tree is balanced. The height determines the worst-case cost of every operation.</p>
+      <ul>
+        <li><span class="a">Balanced tree</span> — height <code>O(log n)</code>, operations are fast</li>
+        <li><span class="r">Degenerate tree</span> — height <code>O(n)</code>, operations degrade to a linked list</li>
+        <li>Balancing guarantees a logarithmic height bound regardless of insertion order</li>
+        <li>Without balancing, sorted input produces the worst case every time</li>
+      </ul>
+    </div>
+    <div>
+      <h3>The cost of imbalance</h3>
+      <table>
+        <thead><tr><th>Scenario</th><th>Height</th><th>Search cost</th></tr></thead>
+        <tbody>
+          <tr><td>Perfectly balanced (n = 1M)</td><td>~20</td><td>20 comparisons</td></tr>
+          <tr><td>Random insertion (n = 1M)</td><td>~40</td><td>40 comparisons</td></tr>
+          <tr><td>Sorted insertion (n = 1M)</td><td>1,000,000</td><td>1M comparisons</td></tr>
+        </tbody>
+      </table>
+      <div class="card amber" style="margin-top:.5em">
+        <p><span class="a">Key insight:</span> self-balancing trees pay a small rebalancing cost per mutation to guarantee <code>O(log n)</code> height at all times. The amortised overhead is negligible compared to the worst-case degenerate scenario.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 03 — BST Recap & Degenerate Case
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">03</span>
+    <h2>BST Recap &amp; the Degenerate Case</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>Binary Search Tree invariant</h3>
+      <p>For every node <code>x</code>: all keys in the left subtree are less than <code>x.key</code>, and all keys in the right subtree are greater.</p>
+      <pre><code>Balanced BST:          Degenerate BST:
+
+       50                  10
+      /  \                   \
+    30    70                  20
+   / \   / \                   \
+  20 40 60 80                   30
+                                 \
+                                  40
+                                   \
+                                    50</code></pre>
+    </div>
+    <div>
+      <h3>Why sorted input kills a plain BST</h3>
+      <p>Inserting <code>[10, 20, 30, 40, 50]</code> into a naive BST produces a right-skewed chain. Every operation becomes <code>O(n)</code>.</p>
+      <ul>
+        <li><span class="r">Search</span> — must traverse the entire chain</li>
+        <li><span class="r">Insert</span> — always appends at the deepest point</li>
+        <li><span class="r">Delete</span> — restructuring offers no height reduction</li>
+      </ul>
+      <div class="card green" style="margin-top:.5em">
+        <p>Self-balancing trees solve this by restructuring after each mutation. The mechanisms differ — <span class="a">rotations</span>, <span class="p">colour flips</span>, <span class="g">node splits</span> — but the goal is always the same: keep <code>h = O(log n)</code>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 04 — AVL Trees — Balance Factor
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">04</span>
+    <h2>AVL Trees — Balance Factor</h2>
+  </div>
+  <div class="cols cols-6040">
+    <div>
+      <h3>Definition</h3>
+      <p>An AVL tree (Adelson-Velsky &amp; Landis, 1962) is a BST where, for every node, the heights of the left and right subtrees differ by at most 1.</p>
+      <h3>Balance factor</h3>
+      <pre><code>BF(node) = height(left subtree) - height(right subtree)</code></pre>
+      <table>
+        <thead><tr><th>Balance factor</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td><code>BF = -1</code></td><td>Right-heavy by one level — acceptable</td></tr>
+          <tr><td><code>BF =  0</code></td><td>Perfectly balanced at this node</td></tr>
+          <tr><td><code>BF = +1</code></td><td>Left-heavy by one level — acceptable</td></tr>
+          <tr><td><code>BF = -2</code> or <code>+2</code></td><td><span class="r">Violation</span> — requires rotation</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3>Height guarantee</h3>
+      <div class="card amber">
+        <p>An AVL tree with <code>n</code> nodes has height at most <span class="a">1.44 &times; log<sub>2</sub>(n)</span>. Tighter than Red-Black trees, making AVL faster for lookup-heavy workloads.</p>
+      </div>
+      <h3 style="margin-top:.4em">Strict balance</h3>
+      <div class="card purple">
+        <p>AVL trees are <span class="p">strictly balanced</span> — they tolerate less imbalance than Red-Black trees. This means more rotations on insert/delete, but faster searches.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 05 — AVL Rotations — LL & RR
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">05</span>
+    <h2>AVL Rotations — LL &amp; RR</h2>
+  </div>
+  <p style="margin-bottom:.1em">When the imbalance is on the <span class="a">outer edge</span> (left-left or right-right), a <span class="g">single rotation</span> restores balance.</p>
+  <div class="cols cols-2">
+    <div>
+      <h3>LL Rotation (Right Rotation)</h3>
+      <pre><code>  BF=+2                  BF=0
+    z                      y
+   / \     rotate         / \
+  y   T4  right(z)       x   z
+ / \     -------->      / \ / \
+x   T3                T1 T2 T3 T4
+/ \
+T1 T2</code></pre>
+      <p>Node <code>y</code> becomes the new root. <code>z</code> becomes <code>y</code>'s right child. <code>T3</code> moves from <code>y</code>'s right to <code>z</code>'s left.</p>
+    </div>
+    <div>
+      <h3>RR Rotation (Left Rotation)</h3>
+      <pre><code>BF=-2                   BF=0
+  z                       y
+ / \     rotate          / \
+T1  y   left(z)         z   x
+   / \  -------->      / \ / \
+  T2  x              T1 T2 T3 T4
+     / \
+    T3 T4</code></pre>
+      <p>Mirror of LL. Node <code>y</code> becomes root. <code>z</code> becomes <code>y</code>'s left child.</p>
+    </div>
+  </div>
+  <div class="card green" style="margin-top:.3em">
+    <p>Single rotations run in <span class="g">O(1)</span> — they reassign at most three pointers and update two heights.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 06 — AVL Rotations — LR & RL
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">06</span>
+    <h2>AVL Rotations — LR &amp; RL</h2>
+  </div>
+  <p style="margin-bottom:.1em">When the imbalance is on the <span class="a">inner edge</span> (left-right or right-left), a <span class="p">double rotation</span> is required.</p>
+  <div class="cols cols-2">
+    <div>
+      <h3>LR Rotation (Left-Right)</h3>
+      <pre><code>Step 1: Left rotate y     Step 2: Right rotate z
+
+    z          z                  x
+   / \        / \                / \
+  y   T4 -> x   T4  ->        y   z
+ / \        / \               / \ / \
+T1  x      y   T3           T1 T2 T3 T4
+   / \    / \
+  T2 T3  T1 T2</code></pre>
+      <p>First rotate left at <code>y</code>, then rotate right at <code>z</code>.</p>
+    </div>
+    <div>
+      <h3>RL Rotation (Right-Left)</h3>
+      <pre><code>Step 1: Right rotate y    Step 2: Left rotate z
+
+  z            z                  x
+ / \          / \                / \
+T1  y   ->  T1   x    ->      z   y
+   / \          / \           / \ / \
+  x   T4      T2  y         T1 T2 T3 T4
+ / \              / \
+T2 T3            T3 T4</code></pre>
+      <p>Mirror of LR. First rotate right at <code>y</code>, then rotate left at <code>z</code>.</p>
+    </div>
+  </div>
+  <div class="card amber" style="margin-top:.3em">
+    <p><span class="a">How to pick the rotation:</span> check the balance factor of the violating node and its heavy child. Same sign → single rotation. Different signs → double rotation.</p>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 07 — AVL Insertion & Deletion
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">07</span>
+    <h2>AVL Insertion &amp; Deletion</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>Insertion algorithm</h3>
+      <ol>
+        <li>Standard BST insert at the correct leaf position</li>
+        <li>Walk back up the path to the root, updating heights</li>
+        <li>At the first node with <code>|BF| = 2</code>, perform the appropriate rotation</li>
+        <li>At most <span class="g">one rotation</span> (single or double) is needed per insertion</li>
+      </ol>
+      <h3 style="margin-top:.3em">Deletion algorithm</h3>
+      <ol>
+        <li>Standard BST delete (in-order successor for 2-child case)</li>
+        <li>Walk back up the path, updating heights</li>
+        <li>At each node with <code>|BF| = 2</code>, perform the appropriate rotation</li>
+        <li>Unlike insertion, deletion may require <span class="r">O(log n) rotations</span></li>
+      </ol>
+    </div>
+    <div>
+      <h3>Complexity</h3>
+      <table>
+        <thead><tr><th>Operation</th><th>Average</th><th>Worst case</th></tr></thead>
+        <tbody>
+          <tr><td>Search</td><td><code>O(log n)</code></td><td><code>O(log n)</code></td></tr>
+          <tr><td>Insert</td><td><code>O(log n)</code></td><td><code>O(log n)</code> — 1 rotation</td></tr>
+          <tr><td>Delete</td><td><code>O(log n)</code></td><td><code>O(log n)</code> — up to <code>O(log n)</code> rotations</td></tr>
+          <tr><td>Space</td><td><code>O(n)</code></td><td><code>O(n)</code> — one height/BF per node</td></tr>
+        </tbody>
+      </table>
+      <div class="card purple" style="margin-top:.5em">
+        <p>AVL trees guarantee at most one rotation on insert but may need multiple rotations on delete. This asymmetry is why Red-Black trees are sometimes preferred for <span class="p">write-heavy workloads</span>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 08 — Red-Black Trees — Properties
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">08</span>
+    <h2>Red-Black Trees — Properties</h2>
+  </div>
+  <div class="cols cols-6040">
+    <div>
+      <h3>The five properties</h3>
+      <div style="display:flex; flex-direction:column; gap:.25em; margin-top:0.2em">
+        <div class="card red">
+          <p><span class="a">1.</span> Every node is either <span class="r">red</span> or <span class="mono" style="color:#ccc">black</span></p>
+        </div>
+        <div class="card amber">
+          <p><span class="a">2.</span> The root is always <span class="mono" style="color:#ccc">black</span></p>
+        </div>
+        <div class="card green">
+          <p><span class="a">3.</span> Every leaf (NIL sentinel) is <span class="mono" style="color:#ccc">black</span></p>
+        </div>
+        <div class="card purple">
+          <p><span class="a">4.</span> If a node is <span class="r">red</span>, both its children are <span class="mono" style="color:#ccc">black</span> (no consecutive reds)</p>
+        </div>
+        <div class="card blue">
+          <p><span class="a">5.</span> All paths from any node to its NIL leaves contain the <span class="b">same number of black nodes</span> (black-height)</p>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h3>Height guarantee</h3>
+      <div class="card amber">
+        <p>A Red-Black tree with <code>n</code> internal nodes has height at most <span class="a">2 &times; log<sub>2</sub>(n + 1)</span>. Looser than AVL's 1.44, but still <code>O(log n)</code>.</p>
+      </div>
+      <h3 style="margin-top:.4em">Black-height</h3>
+      <p>The <span class="b">black-height</span> of a node is the number of black nodes on any path from that node (exclusive) down to a NIL leaf. Property 5 ensures this is well-defined.</p>
+      <h3 style="margin-top:.4em">Rotation guarantee</h3>
+      <div class="card green">
+        <p>At most <span class="g">2 rotations</span> per insert, at most <span class="g">3 rotations</span> per delete. Trade slightly worse search performance for fewer structural changes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 09 — Red-Black Trees — Colouring Rules
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">09</span>
+    <h2>Red-Black Trees — Colouring Rules</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>Why colours?</h3>
+      <p>The colour constraints encode balance information implicitly. Property 4 (no consecutive reds) and Property 5 (equal black-height) together force the longest path to be at most twice the shortest.</p>
+      <h3 style="margin-top:.3em">Intuition via 2-3-4 mapping</h3>
+      <p>Every Red-Black tree is isomorphic to a 2-3-4 tree:</p>
+      <table>
+        <thead><tr><th>2-3-4 node</th><th>Red-Black equivalent</th></tr></thead>
+        <tbody>
+          <tr><td>2-node</td><td>Single black node</td></tr>
+          <tr><td>3-node</td><td>Black node with one red child</td></tr>
+          <tr><td>4-node</td><td>Black node with two red children</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3>Colour constraints at a glance</h3>
+      <div style="display:flex; flex-direction:column; gap:.3em; margin-top:0.2em">
+        <div class="card green">
+          <p><span class="g">New nodes are always inserted as red</span> — this preserves black-height</p>
+        </div>
+        <div class="card red">
+          <p><span class="r">Red violations</span> (two consecutive reds) are fixed by recolouring or rotations</p>
+        </div>
+        <div class="card purple">
+          <p><span class="p">Black violations</span> only arise during deletion and require more complex fixups</p>
+        </div>
+      </div>
+      <div class="card amber" style="margin-top:.4em">
+        <p>The colour scheme is not arbitrary — it is a compact encoding of the 2-3-4 tree structure into a binary tree. Understanding this mapping makes Red-Black tree operations far more intuitive.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 10 — Red-Black Insertion
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">10</span>
+    <h2>Red-Black Insertion — Cases &amp; Uncle Colour</h2>
+  </div>
+  <div class="cols cols-6040">
+    <div>
+      <h3>Insertion procedure</h3>
+      <ol>
+        <li>Standard BST insert; colour the new node <span class="r">red</span></li>
+        <li>If the parent is black, done — no violation</li>
+        <li>If the parent is red, check the <span class="a">uncle</span> (parent's sibling)</li>
+      </ol>
+      <h3 style="margin-top:.3em">Case analysis (parent is red)</h3>
+      <table>
+        <thead><tr><th>Case</th><th>Uncle colour</th><th>Fix</th></tr></thead>
+        <tbody>
+          <tr><td><span class="a">Case 1</span></td><td>Uncle is <span class="r">red</span></td><td>Recolour parent &amp; uncle black, grandparent red. Move violation up. Repeat.</td></tr>
+          <tr><td><span class="a">Case 2</span></td><td>Uncle is <span class="mono" style="color:#ccc">black</span>, inner child</td><td>Rotate node to outer position (converts to Case 3)</td></tr>
+          <tr><td><span class="a">Case 3</span></td><td>Uncle is <span class="mono" style="color:#ccc">black</span>, outer child</td><td>Rotate grandparent, swap colours of parent &amp; grandparent. Done.</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3>Rotation count</h3>
+      <div style="display:flex; flex-direction:column; gap:.3em; margin-top:0.2em">
+        <div class="card green">
+          <p>At most <span class="g">2 rotations</span> per insertion (Case 2 + Case 3)</p>
+        </div>
+        <div class="card amber">
+          <p>Recolouring (Case 1) may propagate up <code>O(log n)</code> times but involves <span class="a">no rotations</span></p>
+        </div>
+        <div class="card purple">
+          <p>After any rotation, the fix-up <span class="p">terminates immediately</span></p>
+        </div>
+      </div>
+      <div class="card blue" style="margin-top:.4em">
+        <p>Compare with AVL: AVL does at most 1 rotation on insert but must always walk to the root updating heights. Red-Black insertion can terminate early when no further violations exist.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 11 — Red-Black Deletion
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">11</span>
+    <h2>Red-Black Deletion</h2>
+  </div>
+  <div class="cols cols-4060">
+    <div>
+      <h3>Overview</h3>
+      <p>Deletion is the most complex Red-Black operation. Removing a black node reduces the black-height on that path, creating a <span class="r">"double-black"</span> deficit.</p>
+      <h3 style="margin-top:.3em">Procedure</h3>
+      <ol>
+        <li>Standard BST delete (find in-order successor if needed)</li>
+        <li>If removed node was <span class="r">red</span>, done</li>
+        <li>If black, replacement carries extra "black" (double-black)</li>
+        <li>Fix up the double-black by case analysis</li>
+      </ol>
+    </div>
+    <div>
+      <h3>Double-black fix-up cases</h3>
+      <table>
+        <thead><tr><th>Case</th><th>Sibling</th><th>Sibling's children</th><th>Fix</th></tr></thead>
+        <tbody>
+          <tr><td><span class="a">1</span></td><td><span class="r">Red</span></td><td>—</td><td>Rotate sibling up, recolour. Converts to Case 2/3/4.</td></tr>
+          <tr><td><span class="a">2</span></td><td>Black</td><td>Both black</td><td>Recolour sibling red, push double-black up. Repeat.</td></tr>
+          <tr><td><span class="a">3</span></td><td>Black</td><td>Near child red</td><td>Rotate near child up, recolour. Converts to Case 4.</td></tr>
+          <tr><td><span class="a">4</span></td><td>Black</td><td>Far child red</td><td>Rotate sibling up, transfer colours. Done.</td></tr>
+        </tbody>
+      </table>
+      <div class="card green" style="margin-top:.3em">
+        <p>At most <span class="g">3 rotations</span> per deletion. Recolouring may propagate <code>O(log n)</code> times (Case 2 bubbling). Deletion case analysis is symmetric for left/right.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 12 — AVL vs Red-Black
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">12</span>
+    <h2>AVL vs Red-Black — When to Choose Which</h2>
+  </div>
+  <table>
+    <thead><tr><th>Property</th><th>AVL</th><th>Red-Black</th></tr></thead>
+    <tbody>
+      <tr><td>Height bound</td><td><code>1.44 log n</code></td><td><code>2 log n</code></td></tr>
+      <tr><td>Search speed</td><td><span class="g">Faster</span> (shorter height)</td><td>Slightly slower</td></tr>
+      <tr><td>Insert rotations</td><td>At most 1</td><td>At most 2</td></tr>
+      <tr><td>Delete rotations</td><td>Up to <code>O(log n)</code></td><td><span class="g">At most 3</span></td></tr>
+      <tr><td>Storage overhead</td><td>Height or BF per node</td><td>1 bit (colour) per node</td></tr>
+      <tr><td>Implementation complexity</td><td>Moderate</td><td>Higher</td></tr>
+    </tbody>
+  </table>
+  <div class="cols cols-2" style="margin-top:.4em">
+    <div class="card amber">
+      <h3>Choose AVL</h3>
+      <ul>
+        <li><span class="a">Read-heavy</span> workloads where search performance dominates</li>
+        <li>Databases and file systems where lookups vastly outnumber mutations</li>
+        <li>When you need the tightest possible height guarantee</li>
+      </ul>
+    </div>
+    <div class="card purple">
+      <h3>Choose Red-Black</h3>
+      <ul>
+        <li><span class="p">Write-heavy</span> workloads with frequent insertions and deletions</li>
+        <li>Standard library implementations (C++ <code>std::map</code>, Java <code>TreeMap</code>)</li>
+        <li>Kernel data structures (Linux CFS scheduler)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 13 — 2-3 Trees
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">13</span>
+    <h2>2-3 Trees</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>Definition</h3>
+      <p>A 2-3 tree is a perfectly balanced search tree where every internal node has either 2 or 3 children, and all leaves are at the same depth.</p>
+      <h3 style="margin-top:.3em">Node types</h3>
+      <table>
+        <thead><tr><th>Node type</th><th>Keys</th><th>Children</th><th>Search</th></tr></thead>
+        <tbody>
+          <tr><td><span class="a">2-node</span></td><td>1 key</td><td>2</td><td>Left &lt; key &lt; Right</td></tr>
+          <tr><td><span class="g">3-node</span></td><td>2 keys (a, b)</td><td>3</td><td>Left &lt; a, Mid between, Right &gt; b</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3>Insertion</h3>
+      <ol>
+        <li>Search down to the correct leaf</li>
+        <li>Add the key to the leaf node</li>
+        <li>If overflow (3 keys), <span class="a">split</span>: push middle key up to parent</li>
+        <li>Splitting may cascade up; if root splits, height increases by 1</li>
+      </ol>
+      <h3 style="margin-top:.3em">Properties</h3>
+      <div class="card green">
+        <ul>
+          <li><span class="g">Perfect balance</span> — all leaves at the same level, always</li>
+          <li>Height: <code>O(log n)</code> with base between 2 and 3</li>
+          <li>Splits maintain balance without rotations</li>
+          <li>Conceptual foundation for Red-Black trees and B-trees</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 14 — 2-3-4 Trees
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">14</span>
+    <h2>2-3-4 Trees</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>Extension of 2-3 trees</h3>
+      <p>A 2-3-4 tree adds a <span class="a">4-node</span> (3 keys, 4 children). This directly corresponds to a Red-Black tree.</p>
+      <table>
+        <thead><tr><th>Node type</th><th>Keys</th><th>Children</th></tr></thead>
+        <tbody>
+          <tr><td>2-node</td><td>1</td><td>2</td></tr>
+          <tr><td>3-node</td><td>2</td><td>3</td></tr>
+          <tr><td>4-node</td><td>3</td><td>4</td></tr>
+        </tbody>
+      </table>
+      <h3 style="margin-top:.3em">Insertion strategies</h3>
+      <ul>
+        <li><span class="a">Bottom-up:</span> insert, then split overflowing nodes back up</li>
+        <li><span class="g">Top-down:</span> pre-emptively split any 4-node on the way down — guarantees the leaf has room</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Equivalence to Red-Black trees</h3>
+      <pre><code>2-node:    [B]          Black node, no red children
+3-node:    [B]-R        Black with one red child
+4-node:  R-[B]-R        Black with two red children</code></pre>
+      <p>Top-down 2-3-4 insertion maps directly to top-down Red-Black insertion with colour flips.</p>
+      <div class="card amber" style="margin-top:.4em">
+        <p>Sedgewick's <em>Algorithms</em> teaches Red-Black trees entirely through this 2-3-4 mapping. Understanding the isomorphism makes Red-Black rotations <span class="a">intuitive rather than magical</span>.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 15 — Left-Leaning Red-Black Trees
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">15</span>
+    <h2>Left-Leaning Red-Black Trees</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>Sedgewick's simplification (2008)</h3>
+      <p>A Left-Leaning Red-Black (LLRB) tree adds one extra invariant: <span class="a">red links lean left</span>. This eliminates half the cases in standard Red-Black tree operations.</p>
+      <h3 style="margin-top:.3em">Operations simplified</h3>
+      <table>
+        <thead><tr><th>Operation</th><th>Standard RB</th><th>LLRB</th></tr></thead>
+        <tbody>
+          <tr><td>Insert cases</td><td>6 (3 + mirror)</td><td><span class="g">3</span></td></tr>
+          <tr><td>Delete cases</td><td>8+</td><td><span class="g">~4</span></td></tr>
+          <tr><td>Code lines</td><td>150–200</td><td><span class="g">40–60</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div>
+      <h3>Core helpers</h3>
+      <pre><code>rotateLeft(h)     // fix right-leaning red link
+rotateRight(h)    // temporarily create right-leaning red
+flipColours(h)    // split a 4-node (both children red)</code></pre>
+      <h3 style="margin-top:.3em">Correspondence</h3>
+      <div class="card purple">
+        <p>LLRB trees are isomorphic to <span class="p">2-3 trees</span> (not 2-3-4), because the left-leaning constraint forbids 4-nodes from persisting — they are always split immediately.</p>
+      </div>
+      <div class="card green" style="margin-top:.3em">
+        <p>LLRB trees are the best choice for teaching and for implementations where <span class="g">code simplicity</span> matters more than raw performance. The ~50-line implementation is remarkably elegant.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 16 — AA Trees
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">16</span>
+    <h2>AA Trees</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>Arne Andersson's simplification (1993)</h3>
+      <p>An AA tree is a Red-Black tree with an additional constraint: <span class="a">right children cannot be red</span>. Equivalently, only right-leaning "horizontal" links at the same level are allowed.</p>
+      <h3 style="margin-top:.3em">Level-based formulation</h3>
+      <ul>
+        <li>Leaf nodes have level 1</li>
+        <li>A left child's level is <span class="r">strictly less</span> than its parent's level</li>
+        <li>A right child's level is <span class="g">equal to or one less</span> than its parent's level</li>
+        <li>A right grandchild's level is <span class="r">strictly less</span> than its grandparent's level</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Two operations only</h3>
+      <table>
+        <thead><tr><th>Operation</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><span class="a">skew</span></td><td>Right rotation to eliminate a left horizontal link</td></tr>
+          <tr><td><span class="g">split</span></td><td>Left rotation to eliminate two consecutive right horizontal links (and increment level)</td></tr>
+        </tbody>
+      </table>
+      <h3 style="margin-top:.3em">Insert and delete</h3>
+      <ul>
+        <li><span class="a">Insert:</span> BST insert, then <code>skew</code> and <code>split</code> back up</li>
+        <li><span class="a">Delete:</span> BST delete, decrease levels if needed, then <code>skew</code> and <code>split</code> back up</li>
+      </ul>
+      <div class="card amber" style="margin-top:.3em">
+        <p>AA trees are arguably the <span class="a">simplest balanced BST</span> to implement correctly. The two-operation approach eliminates the complex case analysis of Red-Black trees.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 17 — Scapegoat Trees
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">17</span>
+    <h2>Scapegoat Trees</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>Lazy rebalancing</h3>
+      <p>Scapegoat trees do not maintain any auxiliary information (no heights, no colours, no levels). Instead, they detect and fix imbalance lazily.</p>
+      <h3 style="margin-top:.3em">How it works</h3>
+      <ol>
+        <li><span class="a">Insert:</span> BST insert; if depth exceeds <code>log<sub>1/&alpha;</sub>(n)</code>, find a <span class="r">scapegoat</span> ancestor</li>
+        <li><span class="a">Scapegoat:</span> highest node where <code>size(child) &gt; &alpha; &times; size(node)</code></li>
+        <li><span class="a">Rebuild:</span> flatten subtree into sorted array, rebuild as perfectly balanced BST</li>
+        <li><span class="a">Delete:</span> mark-and-lazy-rebuild when too many deleted</li>
+      </ol>
+    </div>
+    <div>
+      <h3>The alpha parameter</h3>
+      <table>
+        <thead><tr><th>Alpha</th><th>Behaviour</th></tr></thead>
+        <tbody>
+          <tr><td><code>0.5</code></td><td>Perfectly balanced — rebuild often</td></tr>
+          <tr><td><code>0.75</code></td><td>Good balance vs rebuild trade-off (common default)</td></tr>
+          <tr><td><code>1.0</code></td><td>Never rebalance — degenerate BST</td></tr>
+        </tbody>
+      </table>
+      <h3 style="margin-top:.3em">Complexity</h3>
+      <div style="display:flex; flex-direction:column; gap:.2em">
+        <div class="card green"><p><span class="g">Search:</span> <code>O(log n)</code> worst case</p></div>
+        <div class="card amber"><p><span class="a">Insert:</span> <code>O(log n)</code> amortised (<code>O(n)</code> worst case for a single rebuild)</p></div>
+        <div class="card purple"><p><span class="p">Space:</span> <code>O(n)</code> — no extra metadata per node</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 18 — Weight-Balanced Trees
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">18</span>
+    <h2>Weight-Balanced Trees</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>Balance by subtree size</h3>
+      <p>Weight-balanced trees (BB[&alpha;] trees, Nievergelt &amp; Reingold, 1973) maintain balance based on the <span class="a">size</span> of subtrees rather than height.</p>
+      <h3 style="margin-top:.3em">Weight-balance condition</h3>
+      <pre><code>size(left)  >= alpha * size(node)
+size(right) >= alpha * size(node)
+
+Typical alpha: 2/11 to 1/4
+Bound: alpha <= 1 - 1/sqrt(2) ~ 0.293</code></pre>
+    </div>
+    <div>
+      <h3>Advantages</h3>
+      <ul>
+        <li><span class="a">Order-statistic operations</span> come for free — each node stores subtree size</li>
+        <li><code>rank(x)</code>, <code>select(k)</code>, <code>range_count(lo, hi)</code> are all <code>O(log n)</code></li>
+        <li>Well-suited for persistent/functional implementations</li>
+        <li>Merging and splitting are efficient</li>
+      </ul>
+      <h3 style="margin-top:.3em">Used in practice</h3>
+      <div class="card green">
+        <ul>
+          <li>Haskell's <code>Data.Map</code> and <code>Data.Set</code> use weight-balanced trees</li>
+          <li>Good choice when order-statistic queries are frequent</li>
+          <li>Natural fit for functional programming — persistent structure, no mutation</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 19 — Persistent Balanced Trees
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">19</span>
+    <h2>Persistent Balanced Trees</h2>
+  </div>
+  <div class="cols cols-2">
+    <div>
+      <h3>Path copying</h3>
+      <p>A <span class="a">persistent</span> data structure preserves all previous versions. Instead of modifying in place, each update creates a new path from the modified node to the root.</p>
+      <pre><code>Version 1:         Version 2 (insert 25):
+
+      30                30'
+     / \               / \
+   20   40    ->     20'  40   (shared)
+  /                 / \
+10               10   25  (new)
+
+Shared: 10, 40 (unchanged)
+New:    30', 20', 25
+Cost:   O(log n) new nodes per update</code></pre>
+    </div>
+    <div>
+      <h3>Tree choices for persistence</h3>
+      <table>
+        <thead><tr><th>Tree type</th><th>Suitability</th></tr></thead>
+        <tbody>
+          <tr><td><span class="a">Weight-balanced</span></td><td>Excellent — Haskell's default</td></tr>
+          <tr><td><span class="p">Red-Black</span></td><td>Good — Clojure, Scala</td></tr>
+          <tr><td><span class="g">AVL</span></td><td>Good — slightly more copying</td></tr>
+          <tr><td><span class="b">2-3 trees</span></td><td>Excellent — clean functional style</td></tr>
+        </tbody>
+      </table>
+      <h3 style="margin-top:.3em">Applications</h3>
+      <div class="card purple">
+        <ul>
+          <li><span class="p">Version control</span> — git-like history for in-memory data</li>
+          <li><span class="p">Undo/redo</span> — O(1) rollback by keeping the old root</li>
+          <li><span class="p">Concurrent reads</span> — readers use old versions; no locks</li>
+          <li><span class="p">Temporal databases</span> — query state at any past point</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+  SLIDE 20 — Summary & Comparison Table
+══════════════════════════════════════════════════════════════════ -->
+<section data-background-color="#0a0a0f">
+  <div class="slide-hdr">
+    <span class="tag">20</span>
+    <h2>Summary &amp; Comparison Table</h2>
+  </div>
+  <table>
+    <thead><tr><th>Tree</th><th>Height bound</th><th>Insert rot.</th><th>Delete rot.</th><th>Extra storage</th><th>Best for</th></tr></thead>
+    <tbody>
+      <tr><td><span class="a">AVL</span></td><td><code>1.44 log n</code></td><td>&le;1</td><td>&le;O(log n)</td><td>BF / height</td><td>Read-heavy</td></tr>
+      <tr><td><span class="r">Red-Black</span></td><td><code>2 log n</code></td><td>&le;2</td><td>&le;3</td><td>1 bit colour</td><td>General-purpose</td></tr>
+      <tr><td><span class="g">LLRB</span></td><td><code>2 log n</code></td><td>&le;2</td><td>&le;2</td><td>1 bit colour</td><td>Simple impl.</td></tr>
+      <tr><td><span class="p">AA</span></td><td><code>2 log n</code></td><td>&le;1 split</td><td>&le;O(log n)</td><td>Level integer</td><td>Teaching</td></tr>
+      <tr><td><span class="b">2-3</span></td><td><code>log<sub>2</sub></code> to <code>log<sub>3</sub></code></td><td>Splits up</td><td>Merges up</td><td>Multi-key</td><td>Foundation</td></tr>
+      <tr><td><span class="b">2-3-4</span></td><td><code>log<sub>2</sub></code> to <code>log<sub>4</sub></code></td><td>Splits up</td><td>Merges up</td><td>Multi-key</td><td>RB mapping</td></tr>
+      <tr><td><span class="a">Scapegoat</span></td><td><code>log<sub>1/&alpha;</sub> n</code></td><td>Amort.</td><td>Amort.</td><td>None</td><td>Min. metadata</td></tr>
+      <tr><td><span class="g">Weight-bal.</span></td><td><code>O(log n)</code></td><td>&le;1</td><td>&le;1</td><td>Subtree size</td><td>Order-stat, FP</td></tr>
+    </tbody>
+  </table>
+  <div class="cols cols-2" style="margin-top:.3em">
+    <div class="card amber">
+      <h3>Key takeaways</h3>
+      <ul>
+        <li>All balanced BSTs guarantee <code>O(log n)</code> search, insert, and delete</li>
+        <li>AVL is best for lookup-heavy; Red-Black for mutation-heavy</li>
+        <li>2-3 and 2-3-4 trees are the conceptual foundation — RB trees are their binary encoding</li>
+        <li>Persistent balanced trees enable immutable, versioned data with <code>O(log n)</code> overhead</li>
+      </ul>
+    </div>
+    <div class="card green">
+      <h3>Recommended reading</h3>
+      <ul>
+        <li><span class="a">Sedgewick &amp; Wayne</span> — <em>Algorithms, 4th ed.</em></li>
+        <li><span class="a">CLRS</span> — <em>Introduction to Algorithms</em></li>
+        <li><span class="a">Okasaki</span> — <em>Purely Functional Data Structures</em></li>
+        <li><span class="a">Andersson</span> — "Balanced Search Trees Made Simple" (1993)</li>
+        <li><span class="a">Galperin &amp; Rivest</span> — "Scapegoat Trees" (1993)</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+</div><!-- /slides -->
+</div><!-- /reveal -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/plugin/highlight/highlight.min.js"></script>
+<script>
+Reveal.initialize({
+  hash: true,
+  slideNumber: 'c/t',
+  transition: 'fade',
+  transitionSpeed: 'fast',
+  controls: true,
+  progress: true,
+  center: false,
+  width: 1100,
+  height: 900,
+  margin: 0.01,
+  plugins: [RevealHighlight],
+  highlight: { theme: 'monokai' }
+});
+</script>
+<script>
+(function(){
+  var h = Reveal.getConfig().height || 900;
+  var m = Reveal.getConfig().margin || 0.02;
+  var maxH = Math.floor(h * (1 - 2 * m)) + 'px';
+  function fixSlides(){
+    document.querySelectorAll('.reveal .slides>section,.reveal .slides>section>section').forEach(function(s){
+      s.style.display = 'block';
+      s.style.maxHeight = maxH;
+    });
+  }
+  Reveal.on('ready', fixSlides);
+  Reveal.on('slidechanged', fixSlides);
+})();
+</script>
+</body>
+</html>
