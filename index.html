@@ -6,7 +6,7 @@
   <title>Balanced Trees</title>
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/reveal.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/black.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.6.1/theme/white.min.css">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,17 +14,17 @@
 
   <style>
   :root {
-    --amber:  #f5a623;
-    --green:  #4ecb8d;
-    --purple: #a78bfa;
-    --blue:   #60a5fa;
-    --red:    #f87171;
-    --bg:     #0a0a0f;
-    --bg2:    #10101a;
-    --bg3:    #181824;
-    --border: #2a2a3a;
-    --text:   #e8e8f0;
-    --muted:  #8888a8;
+    --amber:  #bf7d10;
+    --green:  #1c815a;
+    --purple: #6435bc;
+    --blue:   #2b3dc5;
+    --red:    #db3a30;
+    --bg:     #fafaf8;
+    --bg2:    #f1f1ee;
+    --bg3:    #eaeae6;
+    --border: #d1d1cb;
+    --text:   #161616;
+    --muted:  #6a6a63;
   }
 
   .reveal-viewport { background: var(--bg); }
@@ -40,7 +40,7 @@
   .reveal code { font-family: 'JetBrains Mono', monospace; font-size: .72em; }
   .reveal pre  { box-shadow: none; background: var(--bg3); border: 1px solid var(--border);
                  border-radius: 6px; padding: .3em .5em; margin: .25em 0; }
-  .reveal pre code { font-size: .52em; line-height: 1.35; background: transparent; color: #cdd6f4; }
+  .reveal pre code { font-size: .52em; line-height: 1.35; background: transparent; color: #242422; }
 
   /* ── slide chrome ── */
   .slide-hdr {
@@ -75,16 +75,16 @@
   .card.blue  { border-left: 3px solid var(--blue); }
   .card.red   { border-left: 3px solid var(--red); }
   .card h3 { font-size: .64em; margin: 0 0 .12em; }
-  .card p  { font-size: .52em; margin: 0; color: #b8b8d0; }
+  .card p  { font-size: .52em; margin: 0; color: #3d3d39; }
   .card ul { margin: 0; padding-left: 1em; }
-  .card li { font-size: .52em; color: #b8b8d0; margin-bottom: .02em; }
+  .card li { font-size: .52em; color: #3d3d39; margin-bottom: .02em; }
 
   /* ── table ── */
   .reveal table { width: 100%; border-collapse: collapse; font-size: .5em; }
   .reveal table th { background: var(--bg3); color: var(--amber); font-weight: 600;
                      padding: .2em .4em; border: 1px solid var(--border); text-align: left; }
-  .reveal table td { padding: .18em .4em; border: 1px solid var(--border); color: #ccc; }
-  .reveal table tr:nth-child(even) td { background: #0e0e18; }
+  .reveal table td { padding: .18em .4em; border: 1px solid var(--border); color: #2d2d2b; }
+  .reveal table tr:nth-child(even) td { background: #f3f3f1; }
 
   /* ── accent spans ── */
   .a  { color: var(--amber); font-weight: 600; }
@@ -127,8 +127,8 @@
     padding: .2em .55em; border-radius: 5px; font-size: .9em;
     background: var(--bg3); border: 1px solid var(--border); color: var(--text);
   }
-  .ss-node.active { background: #1a2a1a; border-color: var(--green); color: var(--green); }
-  .ss-node.done   { background: #1a1a2a; border-color: var(--purple); color: var(--purple); }
+  .ss-node.active { background: #d3e1d5; border-color: var(--green); color: var(--green); }
+  .ss-node.done   { background: #e6e6e2; border-color: var(--purple); color: var(--purple); }
   .ss-arrow { color: var(--amber); }
   .ss-label { font-size: .8em; color: var(--muted); margin-left: .3em; }
 
@@ -136,6 +136,7 @@
   .reveal ul, .reveal ol { margin: .15em 0 .15em 1em; }
 .reveal .slides > section { display: flex !important; flex-direction: column !important; overflow-y: auto !important; align-items: stretch !important; justify-content: flex-start !important; }
 </style>
+<style>.reveal .slide-number{background-color:transparent}</style>
 </head>
 <body>
 <div class="reveal">
@@ -144,7 +145,7 @@
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 01 — Title
 ══════════════════════════════════════════════════════════════════ -->
-<section class="title-slide" data-background-color="#0a0a0f">
+<section class="title-slide" data-background-color="#fafaf8">
   <div style="font-family:'JetBrains Mono',monospace; font-size:.5em; color:var(--muted); margin-bottom:.4em; letter-spacing:.1em;">COMPUTER SCIENCE FUNDAMENTALS SERIES</div>
   <h1>Balanced<br>Trees</h1>
   <div class="subtitle">
@@ -160,7 +161,7 @@
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 02 — Why Balancing Matters
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">02</span>
     <h2>Why Balancing Matters</h2>
@@ -196,7 +197,7 @@
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 03 — BST Recap & Degenerate Case
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">03</span>
     <h2>BST Recap &amp; the Degenerate Case</h2>
@@ -235,7 +236,7 @@
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 04 — AVL Trees — Balance Factor
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">04</span>
     <h2>AVL Trees — Balance Factor</h2>
@@ -272,7 +273,7 @@
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 05 — AVL Rotations — LL & RR
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">05</span>
     <h2>AVL Rotations — LL &amp; RR</h2>
@@ -312,7 +313,7 @@ T1  y   left(z)         z   x
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 06 — AVL Rotations — LR & RL
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">06</span>
     <h2>AVL Rotations — LR &amp; RL</h2>
@@ -354,7 +355,7 @@ T2 T3            T3 T4</code></pre>
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 07 — AVL Insertion & Deletion
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">07</span>
     <h2>AVL Insertion &amp; Deletion</h2>
@@ -397,7 +398,7 @@ T2 T3            T3 T4</code></pre>
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 08 — Red-Black Trees — Properties
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">08</span>
     <h2>Red-Black Trees — Properties</h2>
@@ -407,16 +408,16 @@ T2 T3            T3 T4</code></pre>
       <h3>The five properties</h3>
       <div style="display:flex; flex-direction:column; gap:.25em; margin-top:0.2em">
         <div class="card red">
-          <p><span class="a">1.</span> Every node is either <span class="r">red</span> or <span class="mono" style="color:#ccc">black</span></p>
+          <p><span class="a">1.</span> Every node is either <span class="r">red</span> or <span class="mono" style="color:#2d2d2b">black</span></p>
         </div>
         <div class="card amber">
-          <p><span class="a">2.</span> The root is always <span class="mono" style="color:#ccc">black</span></p>
+          <p><span class="a">2.</span> The root is always <span class="mono" style="color:#2d2d2b">black</span></p>
         </div>
         <div class="card green">
-          <p><span class="a">3.</span> Every leaf (NIL sentinel) is <span class="mono" style="color:#ccc">black</span></p>
+          <p><span class="a">3.</span> Every leaf (NIL sentinel) is <span class="mono" style="color:#2d2d2b">black</span></p>
         </div>
         <div class="card purple">
-          <p><span class="a">4.</span> If a node is <span class="r">red</span>, both its children are <span class="mono" style="color:#ccc">black</span> (no consecutive reds)</p>
+          <p><span class="a">4.</span> If a node is <span class="r">red</span>, both its children are <span class="mono" style="color:#2d2d2b">black</span> (no consecutive reds)</p>
         </div>
         <div class="card blue">
           <p><span class="a">5.</span> All paths from any node to its NIL leaves contain the <span class="b">same number of black nodes</span> (black-height)</p>
@@ -441,7 +442,7 @@ T2 T3            T3 T4</code></pre>
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 09 — Red-Black Trees — Colouring Rules
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">09</span>
     <h2>Red-Black Trees — Colouring Rules</h2>
@@ -484,7 +485,7 @@ T2 T3            T3 T4</code></pre>
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 10 — Red-Black Insertion
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">10</span>
     <h2>Red-Black Insertion — Cases &amp; Uncle Colour</h2>
@@ -502,8 +503,8 @@ T2 T3            T3 T4</code></pre>
         <thead><tr><th>Case</th><th>Uncle colour</th><th>Fix</th></tr></thead>
         <tbody>
           <tr><td><span class="a">Case 1</span></td><td>Uncle is <span class="r">red</span></td><td>Recolour parent &amp; uncle black, grandparent red. Move violation up. Repeat.</td></tr>
-          <tr><td><span class="a">Case 2</span></td><td>Uncle is <span class="mono" style="color:#ccc">black</span>, inner child</td><td>Rotate node to outer position (converts to Case 3)</td></tr>
-          <tr><td><span class="a">Case 3</span></td><td>Uncle is <span class="mono" style="color:#ccc">black</span>, outer child</td><td>Rotate grandparent, swap colours of parent &amp; grandparent. Done.</td></tr>
+          <tr><td><span class="a">Case 2</span></td><td>Uncle is <span class="mono" style="color:#2d2d2b">black</span>, inner child</td><td>Rotate node to outer position (converts to Case 3)</td></tr>
+          <tr><td><span class="a">Case 3</span></td><td>Uncle is <span class="mono" style="color:#2d2d2b">black</span>, outer child</td><td>Rotate grandparent, swap colours of parent &amp; grandparent. Done.</td></tr>
         </tbody>
       </table>
     </div>
@@ -530,7 +531,7 @@ T2 T3            T3 T4</code></pre>
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 11 — Red-Black Deletion
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">11</span>
     <h2>Red-Black Deletion</h2>
@@ -543,7 +544,7 @@ T2 T3            T3 T4</code></pre>
       <ol>
         <li>Standard BST delete (find in-order successor if needed)</li>
         <li>If removed node was <span class="r">red</span>, done</li>
-        <li>If black, replacement carries extra "black" (double-black)</li>
+        <li>If black, replacement carries extra "#ffffff" (double-black)</li>
         <li>Fix up the double-black by case analysis</li>
       </ol>
     </div>
@@ -568,7 +569,7 @@ T2 T3            T3 T4</code></pre>
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 12 — AVL vs Red-Black
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">12</span>
     <h2>AVL vs Red-Black — When to Choose Which</h2>
@@ -607,7 +608,7 @@ T2 T3            T3 T4</code></pre>
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 13 — 2-3 Trees
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">13</span>
     <h2>2-3 Trees</h2>
@@ -649,7 +650,7 @@ T2 T3            T3 T4</code></pre>
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 14 — 2-3-4 Trees
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">14</span>
     <h2>2-3-4 Trees</h2>
@@ -688,7 +689,7 @@ T2 T3            T3 T4</code></pre>
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 15 — Left-Leaning Red-Black Trees
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">15</span>
     <h2>Left-Leaning Red-Black Trees</h2>
@@ -726,7 +727,7 @@ flipColours(h)    // split a 4-node (both children red)</code></pre>
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 16 — AA Trees
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">16</span>
     <h2>AA Trees</h2>
@@ -767,7 +768,7 @@ flipColours(h)    // split a 4-node (both children red)</code></pre>
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 17 — Scapegoat Trees
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">17</span>
     <h2>Scapegoat Trees</h2>
@@ -807,7 +808,7 @@ flipColours(h)    // split a 4-node (both children red)</code></pre>
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 18 — Weight-Balanced Trees
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">18</span>
     <h2>Weight-Balanced Trees</h2>
@@ -846,7 +847,7 @@ Bound: alpha <= 1 - 1/sqrt(2) ~ 0.293</code></pre>
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 19 — Persistent Balanced Trees
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">19</span>
     <h2>Persistent Balanced Trees</h2>
@@ -894,7 +895,7 @@ Cost:   O(log n) new nodes per update</code></pre>
 <!-- ═══════════════════════════════════════════════════════════════
   SLIDE 20 — Summary & Comparison Table
 ══════════════════════════════════════════════════════════════════ -->
-<section data-background-color="#0a0a0f">
+<section data-background-color="#fafaf8">
   <div class="slide-hdr">
     <span class="tag">20</span>
     <h2>Summary &amp; Comparison Table</h2>
